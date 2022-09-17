@@ -1,0 +1,54 @@
+int buzz = 13;                // the pin that the LED is atteched to
+int sensor = 2;              // the pin that the sensor is atteched to
+int state = LOW;             // by default, no motion detected
+int val = 0;                 // variable to store the sensor status (value)
+
+int ldr=A0;//Set A0(Analog Input) for LDR.
+int led = 3;
+int value=0;
+
+void setup() {
+  pinMode(buzz, OUTPUT);      // initalize buzzer as an output
+  pinMode(sensor, INPUT);    // initialize sensor as an input
+  
+  pinMode(led,OUTPUT);
+  
+  Serial.begin(9600);        // initialize serial
+}
+
+void loop(){
+  
+  value=analogRead(ldr);//Reads the Value of LDR(light).
+  Serial.println("LDR value is :");//Prints the value of LDR to Serial Monitor.
+  Serial.println(value);
+  val = digitalRead(sensor);   // read sensor value
+
+  if(value<250)
+  {
+    digitalWrite(led,HIGH);//Makes the LED glow in Dark.
+  }
+  else
+  {
+    digitalWrite(led,LOW);//Turns the LED OFF in Light.
+  }
+  
+  if (val == HIGH) {           // check if the sensor is HIGH
+    digitalWrite(buzz, HIGH);   // turn buzzer ON
+    
+    delay(500);                // delay 100 milliseconds 
+    
+    if (state == LOW) {
+      Serial.println("Motion detected!"); 
+      state = HIGH;       // update variable state to HIGH
+    }
+  } 
+  else {
+      digitalWrite(buzz, LOW); // turn buzzer OFF
+      delay(500);             // delay 200 milliseconds 
+      
+      if (state == HIGH){
+        Serial.println("Motion stopped!");
+        state = LOW;       // update variable state to LOW
+    }
+  }
+}
